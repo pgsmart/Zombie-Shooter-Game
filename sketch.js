@@ -37,6 +37,10 @@ var otherCoin1, otherCoin2, otherCoin3;
 var otherCoinsCollected;
 var opponentNameTxt;
 var otherTreasure;
+var enterNameText;
+var mainFont;
+var confettiImg;
+var confetti;
 function preload() {
 
   shooterImg = loadImage("assets/shooter_2.png")
@@ -66,6 +70,9 @@ function preload() {
   coinClearImg = loadImage("assets/coinTransparent.png")
   coinFullImg = loadImage("assets/coin/sprite_1.png")
   treasureClearImg = loadImage("assets/treasureClear.png")
+
+  confettiImg = loadImage("assets/confetti.gif")
+
 }
 
 function setup() {
@@ -89,7 +96,7 @@ function setup() {
   player.setCollider("rectangle", 0, 0, 300, 300)
 
   opponentNameTxt = createElement('h1')
-  opponentNameTxt.position(width* 0.85,height * 0.30)
+  opponentNameTxt.position(width* 0.87,height * 0.30)
   opponentNameTxt.style('color','#ffffff')
   opponentNameTxt.hide()
 
@@ -115,21 +122,21 @@ function setup() {
   treasure1.addImage(treasureClearImg)
   treasure1.scale = 0.15
 
-  otherCoin1 = createSprite(width * 0.80,height * 0.50)
+  otherCoin1 = createSprite(width * 0.85,height * 0.50)
   otherCoin1.addImage(coinClearImg)
   otherCoin1.scale = 0.5
-  otherCoin2 = createSprite(width * 0.85,height * 0.50)
+  otherCoin2 = createSprite(width * 0.90,height * 0.50)
   otherCoin2.addImage(coinClearImg)
   otherCoin2.scale = 0.5
-  otherCoin3 = createSprite(width * 0.90,height * 0.50)
+  otherCoin3 = createSprite(width * 0.95,height * 0.50)
   otherCoin3.addImage(coinClearImg)
   otherCoin3.scale = 0.5
   otherCoin1.visible = false;
   otherCoin2.visible = false;
   otherCoin3.visible = false;
-  otherTreasure = createSprite(width * 0.80,height*0.60)
+  otherTreasure = createSprite(width * 0.90,height*0.67)
   otherTreasure.addImage(treasureClearImg)
-  otherTreasure.scale = 0.15
+  otherTreasure.scale = 0.20
   otherTreasure.visible = false;
 
   treasure = createSprite(Math.round(random(0,8))* height/7 + width/5,Math.round(random(0,4)) * height/7 + height/4,50,50)
@@ -140,31 +147,48 @@ function setup() {
 
   moveCoin()
 
+  
   input = createInput()
-  input.position(width * 0.90,height * 0.30)
-  input.size(100,50)
+  input.position(width * 0.50 - input.width,height * 0.40)
+  input.size(width/7,height/18)
+
+  enterNameText = createElement('h1')
+  enterNameText.html("Enter Your Name")
+  enterNameText.position(input.x, input.y - height * 0.10)
+  enterNameText.style('color',"white")
+
 
   playButton = createButton("Play")
   playButton.mousePressed(playSound)
-  playButton.position(width * 0.90,400)
-  playButton.size(100,50)
+  playButton.position(input.x,input.y + height * 0.10)
+  playButton.size(width/7,height/15)
 
   waitText = createElement('h1')
   waitText.hide()
   waitText.style('color','#f2f2f0')
-  waitText.position(width * 0.83,height * 0.40)
+  waitText.position(width * 0.48 - height/8,height * 0.30)
 
-  soundButton = createButton("Mute/Unmute")
+  soundButton = createElement("button","Mute/Unmute")
+  soundButton.id('soundControl')
+  document.getElementById('soundControl').innerHTML = '<img src="/assets/volumeOn.png" />';
   soundButton.position(7 * width/8,height/12)
-  soundButton.size(100,30)
+  soundButton.size(140,140)
+  soundButton.style('background-color','#0d0d0d')
+  soundButton.style('border','none')
   soundButton.mousePressed(soundChange)
+  soundButton.visible = false;
   
   loading = createElement('img')
   loading.style('content','url(/assets/loading.gif)')
-  loading.position(width * 0.83,height * 0.50)
+  loading.position(width * 0.49 - height/8,height * 0.45)
   loading.size(height/4,height/4)
   loading.hide()
 
+  confetti = createElement('img')
+  confetti.style("content","url(/assets/confetti.gif)")
+  confetti.position(0,0)
+  confetti.size(width,height)
+  confetti.hide()
 }
 
 function draw() {
@@ -173,10 +197,18 @@ function draw() {
 
   image(bgImg, 0, 0, windowWidth, windowHeight)
 
-  if(playerCount === 2){
+  if(playerCount === 2 && state === "WAIT"){
     state = "PLAY"
     startGame();
   }
+
+  if(sound.isPlaying() === true){
+    document.getElementById('soundControl').innerHTML = '<img src="/assets/volumeOff.png" />'
+  }else{
+    document.getElementById('soundControl').innerHTML = '<img src="/assets/volumeOn.png" />'
+  }
+
+  if(state === "PLAY"){
 
   //moving the player up and down and making the game mobile compatible using touches
   if (keyDown("UP_ARROW") && player.y > height / 4 && state === "PLAY") {
@@ -227,7 +259,7 @@ function draw() {
     treasure.scale = 0.5
     treasure1.addImage(treasureImg)
     setTimeout(gameWon,3000)
-
+    confetti.show()
     zombieGroup.destroyEach()
   }
 
@@ -342,6 +374,14 @@ function draw() {
   text(Math.round(percent * 100) + "%", width / 4 + (percent * width / 2) - width / 44, height / 7 + height / 180)
 }
 
+  if(state === "WAIT"){
+  var backBoxColor = color(52, 155, 235)
+  backBoxColor.setAlpha(150)
+  fill(backBoxColor)
+  rect(input.x + height * 0.135,height * 0.50, width * 0.25, height * 0.65)
+  }
+}
+
 function startGame(){
   waitText.hide()
   loading.hide()
@@ -349,8 +389,10 @@ function startGame(){
   otherCoin1.visible = true;
   otherCoin2.visible = true;
   otherCoin3.visible = true;
+  soundButton.visible = true;
   otherTreasure.visible = true;
   opponentNameTxt.show()
+  bgImg = loadImage("assets/background.jpg")
 }
 
 function gameWon(){
@@ -368,6 +410,9 @@ function gameWon(){
       }
     }
   )
+  setTimeout(function(){
+    newPlayer.resetPlayerCount()
+  },3000)
 }
 
 function playSound(){
@@ -376,9 +421,10 @@ function playSound(){
   sound.play()
   input.hide()
   playButton.hide()
+  enterNameText.hide()
   waitText.html(`<center>Welcome ${input.value()}! <br><br> Waiting for another <br>player to join.<center>`)
   waitText.show()
-  loading.show()
+  loading.show()  
 }
 
 function soundChange(){

@@ -29,11 +29,12 @@ class Players{
     getCount(){     
         database.ref("/playerCount").on("value",function(data){
             playerCount = data.val()
-          /*if(playerCount === 2){
-          extraPlayer()
-          state = "STOP"
-        }*/
         })
+    }
+    resetPlayerCount(){
+      database.ref("/").update({
+        playerCount: 0,
+      })
     }
   updateTreasure(){
     database.ref("/player" + this.index).update({
@@ -49,7 +50,7 @@ class Players{
         break;
     }
     database.ref("/player" + otherIndex + "/name").on("value",function(data){
-      opponentNameTxt.html(`${data.val()}`)
+      opponentNameTxt.html(`${data.val()}'s Stats`)
     })
     database.ref("/player" + otherIndex + "/treasureCollected").on("value",function(data){
       if(data.val() === true){
@@ -58,7 +59,6 @@ class Players{
       }
     })
     database.ref("/player" + otherIndex + "/coins").on('value',function(data){
-      console.log(data.val())
       switch(data.val()){
         case 0 : 
           otherCoin1.addImage(coinClearImg)
