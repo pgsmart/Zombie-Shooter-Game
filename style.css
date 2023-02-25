@@ -1,0 +1,42 @@
+
+@font-face {
+  font-family: smallFont;
+  src: url(assets/deceptibots-font/Deceptibots-4O6B.otf);
+}
+
+@font-face {
+  font-family: buttonFont;
+  src: url(assets/ozda-font/Ozda-gKRE.otf);
+}
+
+input[type=text] {
+  border-width: 5px;
+  border: 5px solid rgb(251, 249, 249);
+  background: transparent;
+  color: white;
+  text-align:center;
+}
+
+input::placeholder{
+  color: white;
+  text-align: center;
+}
+
+h1{
+  font-family: smallFont;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+}
+
+button{
+  font-family: buttonFont;
+  border-radius: 20px;
+}
+
