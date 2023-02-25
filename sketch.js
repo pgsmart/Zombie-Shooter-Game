@@ -194,7 +194,7 @@ function setup() {
 
   soundButton = createElement("button","Mute/Unmute")
   soundButton.id('soundControl')
-  document.getElementById('soundControl').innerHTML = '<img src="/assets/volumeOn.png" />';
+  document.getElementById('soundControl').innerHTML = '<img src="assets/volumeOn.png" />';
   soundButton.position(7 * width/8,height/12)
   soundButton.size(140,140)
   soundButton.style('background-color','#0d0d0d')
@@ -203,13 +203,13 @@ function setup() {
   soundButton.visible = false;
   
   loading = createElement('img')
-  loading.style('content','url(/assets/loading.gif)')
+  loading.style('content','url(assets/loading.gif)')
   loading.position(width * 0.49 - height/8,height * 0.45)
   loading.size(height/4,height/4)
   loading.hide()
 
   confetti = createElement('img')
-  confetti.style("content","url(/assets/confetti.gif)")
+  confetti.style("content","url(assets/confetti.gif)")
   confetti.position(0,0)
   confetti.size(width,height)
   confetti.hide()
@@ -227,9 +227,9 @@ function draw() {
   }
 
   if(sound.isPlaying() === true){
-    document.getElementById('soundControl').innerHTML = '<img src="/assets/volumeOff.png" />'
+    document.getElementById('soundControl').innerHTML = '<img src="assets/volumeOff.png" />'
   }else{
-    document.getElementById('soundControl').innerHTML = '<img src="/assets/volumeOn.png" />'
+    document.getElementById('soundControl').innerHTML = '<img src="assets/volumeOn.png" />'
   }
 
   if(state === "PLAY"){
@@ -500,15 +500,15 @@ function gameOver(how){
   switch(how){
     case 'heart': 
     txt = "You ran out of hearts. Better luck next time!",
-    img = "/assets/gameOverHeart.png"
+    img = "assets/gameOverHeart.png"
       break;
     case 'treasure': 
     txt = "The other player won first. Better luck next time!",
-    img = "/assets/gameOver.png"
+    img = "assets/gameOver.png"
       break;
     case 'disconnect': 
     txt="The other player has disconnected. Please refresh the page to play again.",
-    img="/assets/wifi.png"
+    img="assets/wifi.png"
   }
   swal(
     {
